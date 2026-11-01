@@ -1,14 +1,14 @@
 # Dev3Pack - Week 3 Homework
 
-## El reto: tu primera mini dApp full stack
+## El reto: sus primeros programas en Solana
 
-Esta semana juntás todo lo visto en las tres semanas en una **mini app full stack sobre Solana**. No tiene que ser grande: buscamos algo pequeño, que funcione de punta a punta y que entiendas por completo.
+Esta semana juntás todo lo visto en las tres semanas en un programa de Solana! No tiene que ser grande: buscamos algo pequeño, que funcione de punta a punta y que entiendas por completo.
 
-Tu app debe tener:
+Sus programas deben tener:
 
 - **Programa on-chain con Anchor**: al menos una instrucción que cree o modifique estado (por ejemplo, una cuenta PDA).
-- **Frontend o cliente con Solana Kit** (`@solana/kit`): que se conecte a una wallet o firmante, llame a tu programa y muestre el estado on-chain.
 - **Conceptos de las semanas anteriores**: cuentas, transacciones, PDAs, y tokens si encajan con tu idea.
+- - Opcional: **Frontend o cliente con Solana Kit** (`@solana/kit`): que se conecte a una wallet o firmante, llame a tu programa y muestre el estado on-chain.
 
 ## Ideas de ejemplo
 
@@ -22,8 +22,7 @@ Elegí una o proponé la tuya, siempre que sea simple:
 ## Requisitos mínimos
 
 1. El programa Anchor compila y tiene al menos un test.
-2. El frontend/cliente usa Solana Kit para leer y escribir en tu programa.
-3. Funciona en una red local o en devnet.
+2. Funciona en una red local o en devnet.
 4. Un `README.md` dentro de tu carpeta explicando qué hace la app y cómo correrla.
 
 ## Cómo entregar
