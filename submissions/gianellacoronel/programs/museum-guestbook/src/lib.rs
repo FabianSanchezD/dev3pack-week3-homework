@@ -7,6 +7,8 @@ pub mod museum_guestbook {
     use super::*;
 
     pub fn leave_review(ctx: Context<LeaveReview>, message: String) -> Result<()>{
+        require!(message.len() <= ReviewAccount::MAX_MESSAGE_LENGTH, GuestBookError::MessageTooLong);
+
         let review = &mut ctx.accounts.review;
 
         review.tour = ctx.accounts.tour.key();
@@ -36,6 +38,10 @@ pub mod museum_guestbook {
 
         Ok(())
     }
+}
+
+impl ReviewAccount {
+    pub const MAX_MESSAGE_LENGTH: usize = 200;
 }
 
 #[derive(Accounts)]
@@ -92,4 +98,10 @@ pub struct ReviewAccount {
     #[max_len(200)]
     pub message: String,
     pub timestamp: i64,
+}
+
+#[error_code]
+pub enum GuestBookError {
+    #[msg("El mensaje excede la longitud máxima permitida")]
+    MessageTooLong
 }
