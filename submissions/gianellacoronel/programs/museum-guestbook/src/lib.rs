@@ -1,13 +1,4 @@
-pub mod constants;
-pub mod error;
-pub mod instructions;
-pub mod state;
-
 use anchor_lang::prelude::*;
-
-pub use constants::*;
-pub use instructions::*;
-pub use state::*;
 
 declare_id!("8kXcQPkzwhvKgKxDvhzQgb2dRnAFMi1ZTYz6ARYgSHq7");
 
@@ -15,11 +6,25 @@ declare_id!("8kXcQPkzwhvKgKxDvhzQgb2dRnAFMi1ZTYz6ARYgSHq7");
 pub mod museum_guestbook {
     use super::*;
 
-    pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
-        crate::instructions::initialize::handle_initialize(ctx)
-    }
 
-    pub fn increment(ctx: Context<Increment>) -> Result<()> {
-        crate::instructions::increment::handle_increment(ctx)
-    }
+}
+
+#[account]
+#[derive(InitSpace)]
+pub struct TourAccount {
+    #[max_len(50)]
+    pub name: String,
+    #[max_len(200)]
+    pub description: String,
+    pub review_count: u64,
+}
+
+#[account]
+#[derive(InitSpace)]
+pub struct ReviewAccount {
+    pub tour: Pubkey,
+    pub visitor: Pubkey,
+    #[max_len(200)]
+    pub message: String,
+    pub timestamp: i64,
 }
