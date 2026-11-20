@@ -6,6 +6,19 @@ declare_id!("8kXcQPkzwhvKgKxDvhzQgb2dRnAFMi1ZTYz6ARYgSHq7");
 pub mod museum_guestbook {
     use super::*;
 
+    pub fn leave_review(ctx: Context<LeaveReview>, message: String) -> Result<()>{
+        let review = &mut ctx.accounts.review;
+
+        review.tour = ctx.accounts.tour.key();
+        review.visitor = ctx.accounts.visitor.key();
+        review.message = message;
+        review.timestamp = Clock::get()?.unix_timestamp;
+
+        ctx.accounts.tour.review_count += 1;
+
+        Ok(())
+    }
+
     pub fn create_tour(
         ctx: Context<CreateTour>,
         tour_id: u64,
