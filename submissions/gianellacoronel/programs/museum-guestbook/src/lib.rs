@@ -6,7 +6,23 @@ declare_id!("8kXcQPkzwhvKgKxDvhzQgb2dRnAFMi1ZTYz6ARYgSHq7");
 pub mod museum_guestbook {
     use super::*;
 
+    pub fn create_tour(
+        ctx: Context<CreateTour>,
+        tour_id: u64,
+        name: String,
+        description: String,
+        duration: u16) -> Result<()>{
+        let tour = &mut ctx.accounts.tour;
 
+        tour.authority = ctx.accounts.authority.key();
+        tour.tour_id = tour_id;
+        tour.name = name;
+        tour.description = description;
+        tour.duration = duration;
+        tour.review_count = 0;
+
+        Ok(())
+    }
 }
 
 #[derive(Accounts)]
