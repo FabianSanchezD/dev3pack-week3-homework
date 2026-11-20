@@ -10,6 +10,24 @@ pub mod museum_guestbook {
 }
 
 #[derive(Accounts)]
+pub struct LeaveReview<'info> {
+    #[account(mut)]
+    pub visitor: Signer<'info>,
+    #[account(mut)]
+    pub tour: Account<'info, TourAccount>,
+    #[account(
+        init,
+        payer = visitor,
+        space = 8 + ReviewAccount::INIT_SPACE,
+        seeds = [b"review", tour.key().as_ref(),&tour.review_count.to_le_bytes()],
+        bump
+    )]
+    pub review: Account<'info, ReviewAccount>,
+    pub system_program: Program<'info, System>,
+}
+
+#[derive(Accounts)]
+#[instruction(tour_id: u64)]
 pub struct CreateTour<'info> {
     #[account(mut)]
     pub authority: Signer<'info>,
@@ -17,7 +35,7 @@ pub struct CreateTour<'info> {
         init,
         payer = authority,
         space = 8 + TourAccount::INIT_SPACE,
-        seeds = [b"tour", authority.key().as_ref()],
+        seeds = [b"tour", authority.key().as_ref(), &tour_id.to_le_bytes()],
         bump
     )]
     pub tour: Account<'info, TourAccount>,
@@ -27,6 +45,8 @@ pub struct CreateTour<'info> {
 #[account]
 #[derive(InitSpace)]
 pub struct TourAccount {
+    pub authority: Pubkey,
+    pub tour_id: u64,
     #[max_len(50)]
     pub name: String,
     #[max_len(200)]
