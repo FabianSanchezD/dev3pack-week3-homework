@@ -10,13 +10,15 @@ pub mod museum_guestbook {
         require!(message.len() <= ReviewAccount::MAX_MESSAGE_LENGTH, GuestBookError::MessageTooLong);
 
         let review = &mut ctx.accounts.review;
+        let tour = &mut ctx.accounts.tour;
 
-        review.tour = ctx.accounts.tour.key();
+        review.tour = tour.key();
         review.visitor = ctx.accounts.visitor.key();
         review.message = message;
         review.timestamp = Clock::get()?.unix_timestamp;
 
-        ctx.accounts.tour.review_count += 1;
+        let count = tour.review_count.checked_add(1).ok_or(GuestBookError::Overflow)?;
+        ctx.accounts.tour.review_count = count;
 
         Ok(())
     }
@@ -103,5 +105,7 @@ pub struct ReviewAccount {
 #[error_code]
 pub enum GuestBookError {
     #[msg("El mensaje excede la longitud máxima permitida")]
-    MessageTooLong
+    MessageTooLong,
+    #[msg("El contador llegó al límite máximo")]
+    Overflow,
 }
