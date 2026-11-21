@@ -29,6 +29,10 @@ pub mod museum_guestbook {
         name: String,
         description: String,
         duration: u16) -> Result<()>{
+        require!(name.len() <= TourAccount::MAX_NAME_LENGTH, GuestBookError::NameTooLong);
+        require!(description.len() <= TourAccount::MAX_DESCRIPTION_LENGTH, GuestBookError::DescriptionTooLong);
+        require!(duration > 0, GuestBookError::InvalidDuration);
+
         let tour = &mut ctx.accounts.tour;
 
         tour.authority = ctx.accounts.authority.key();
@@ -46,17 +50,26 @@ impl ReviewAccount {
     pub const MAX_MESSAGE_LENGTH: usize = 200;
 }
 
+impl TourAccount {
+    pub const MAX_NAME_LENGTH: usize = 50;
+    pub const MAX_DESCRIPTION_LENGTH: usize = 200;
+}
+
 #[derive(Accounts)]
 pub struct LeaveReview<'info> {
     #[account(mut)]
     pub visitor: Signer<'info>,
-    #[account(mut)]
+    #[account(
+        mut,
+        seeds = [b"tour", tour.authority.as_ref(), &tour.tour_id.to_le_bytes()],
+        bump
+    )]
     pub tour: Account<'info, TourAccount>,
     #[account(
         init,
         payer = visitor,
         space = 8 + ReviewAccount::INIT_SPACE,
-        seeds = [b"review", tour.key().as_ref(),&tour.review_count.to_le_bytes()],
+        seeds = [b"review", tour.key().as_ref(), &tour.review_count.to_le_bytes()],
         bump
     )]
     pub review: Account<'info, ReviewAccount>,
@@ -108,4 +121,10 @@ pub enum GuestBookError {
     MessageTooLong,
     #[msg("El contador llegó al límite máximo")]
     Overflow,
+    #[msg("El nombre excede la longitud máxima permitida")]
+    NameTooLong,
+    #[msg("La descripción excede la longitud máxima permitida")]
+    DescriptionTooLong,
+    #[msg("La duración debe ser mayor que cero")]
+    InvalidDuration,
 }
