@@ -1796,7 +1796,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "museum-guestbook"
+name = "museum_guestbook"
 version = "0.1.0"
 dependencies = [
  "anchor-lang",
