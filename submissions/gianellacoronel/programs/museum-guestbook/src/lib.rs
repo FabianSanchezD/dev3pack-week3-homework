@@ -18,7 +18,7 @@ pub mod museum_guestbook {
         review.timestamp = Clock::get()?.unix_timestamp;
 
         let count = tour.review_count.checked_add(1).ok_or(GuestBookError::Overflow)?;
-        ctx.accounts.tour.review_count = count;
+        tour.review_count = count;
 
         Ok(())
     }
